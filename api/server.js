@@ -13,8 +13,25 @@ server.get("/", (req, res) => {
 
 server.get("/accounts", async (req, res, next) => {
   try {
-    const accounts = await db.select("*").from("accounts");
+    const accounts = await db("accounts");
     res.json(accounts);
+  } catch (err) {
+    console.log("get", err);
+    next(next);
+  }
+});
+
+server.post("/accounts", async (req, res, next) => {
+  try {
+    const payload = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
+    const [id] = await db("accounts").insert(payload);
+    const newAccount = await db("accounts")
+      .where("id", id)
+      .first();
+    res.json(newAccount);
   } catch (err) {
     console.log("get", err);
     next(next);
