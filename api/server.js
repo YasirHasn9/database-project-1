@@ -58,4 +58,16 @@ server.put("/accounts/:id", async (req, res, next) => {
     next(next);
   }
 });
+
+server.delete("/accounts/:id", async (req, res, next) => {
+  try {
+    await db("accounts")
+      .where("id", req.params.id)
+      .del();
+    res.status(204).end();
+  } catch (err) {
+    console.log("get", err);
+    next(next);
+  }
+});
 module.exports = server;
