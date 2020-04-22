@@ -37,4 +37,25 @@ server.post("/accounts", async (req, res, next) => {
     next(next);
   }
 });
+
+server.put("/accounts/:id", async (req, res, next) => {
+  try {
+    const payload = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
+    await db("accounts")
+      .where("id", req.params.id)
+      .update(payload);
+
+    let newAccount = await db("accounts")
+      .where("id", req.params.id)
+      .first();
+
+    res.json(newAccount);
+  } catch (err) {
+    console.log("get", err);
+    next(next);
+  }
+});
 module.exports = server;
